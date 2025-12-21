@@ -34,7 +34,7 @@ class Doublet(ElementaryFlow):
 class FreeVortex(ElementaryFlow):
     def __init__(self, strength: float, position=(0, 0)):
         super().__init__(position)
-        self.u = lambda x,y: strength * ((y-self.y0)/(x-self.x0)**2) / (1 + ((y-self.y0)/(x-self.x0))**2)
+        self.u = lambda x,y: strength * -((y-self.y0)/(x-self.x0)**2) / (1 + ((y-self.y0)/(x-self.x0))**2)
         self.v = lambda x,y: strength * (1/(x-self.x0)) / (1 + ((y-self.y0)/(x-self.x0))**2)
         self.pos_color = "purple"
 
@@ -72,7 +72,7 @@ class ComplexFlow:
 uni = Uniform(1, 0)
 source = Source(1)
 half_rankine = ComplexFlow([uni, source])
-half_rankine.display(1, 1, 0.1)
+half_rankine.display(5, 5, 0.1)
 
 # full bluff body
 source1 = Source(1, (-0.5, 0))
@@ -89,3 +89,9 @@ cyl.display(3, 3, 0.1)
 vortex = FreeVortex(1)
 rotcyl = ComplexFlow([uni, doub, vortex])
 rotcyl.display(3, 3, 0.1)
+
+# drain
+sink = Source(-1)
+vort = FreeVortex(3)
+drain = ComplexFlow([sink, vort])
+drain.display(3, 3, 0.1)
