@@ -1,39 +1,44 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+#####################################################################################
 
 class ElementaryFlow:
-
-    def __init__(self):
+    def __init__(self, position):
         self.u: function[float, float]
         self.v: function[float, float]
+        self.x0, self.y0 = position
+        self.r = lambda x,y: ((x-self.x0)**2 + (y-self.y0)**2)**(1/2)
+        self.pos_color = None
 
 class Uniform(ElementaryFlow):
-
     def __init__(self, U: float, V: float):
-        super().__init__()
+        super().__init__(position=(0, 0))
         self.u = lambda x,y: U
         self.v = lambda x,y: V
 
 class Source(ElementaryFlow):
-
     def __init__(self, strength: float, position=(0, 0)):
-        super().__init__()
-        x0, y0 = position
-        self.u = lambda x,y: strength * 2*(x-x0) / ((x-x0)**2 + (y-y0)**2)
-        self.v = lambda x,y: strength * 2*(y-y0) / ((x-x0)**2 + (y-y0)**2)
+        super().__init__(position)
+        self.u = lambda x,y: strength * 2*(x-self.x0) / self.r(x,y)**2
+        self.v = lambda x,y: strength * 2*(y-self.y0) / self.r(x,y)**2
+        self.pos_color = "green" if strength > 0 else "red"
 
 class Doublet(ElementaryFlow):
-
     def __init__(self, strength: float, position=(0, 0)):
-        super().__init__()
-
+        super().__init__(position)
+        self.u = lambda x,y: strength * ((y-self.y0)**2 - (x-self.x0)**2) / self.r(x,y)**4
+        self.v = lambda x,y: strength * (-2*(y-self.y0)*(x-self.x0)) / self.r(x,y)**4
+        self.pos_color = "blue"
 
 class FreeVortex(ElementaryFlow):
-
     def __init__(self, strength: float, position=(0, 0)):
-        super().__init__()
+        super().__init__(position)
+        self.u = lambda x,y: strength * ((y-self.y0)/(x-self.x0)**2) / (1 + ((y-self.y0)/(x-self.x0))**2)
+        self.v = lambda x,y: strength * (1/(x-self.x0)) / (1 + ((y-self.y0)/(x-self.x0))**2)
+        self.pos_color = "purple"
 
+#####################################################################################
 
 class ComplexFlow:
 
@@ -52,44 +57,35 @@ class ComplexFlow:
 
         plt.figure(figsize=(10, 10))
         plt.streamplot(X, Y, u, v, density=1.5, linewidth=None, color="#2EA7C2")
-        plt.title('Potential Flow')
 
+        for flow in self.flows:
+            if flow.pos_color:
+                plt.scatter(x=flow.x0, y=flow.y0, marker='o', color=flow.pos_color)
+        
+        plt.title('Potential Flow')
         plt.grid()
         plt.show()
 
+#####################################################################################
 
-'''uni = Uniform(1, 0)
+# half bluff body
+uni = Uniform(1, 0)
 source = Source(1)
 half_rankine = ComplexFlow([uni, source])
-half_rankine.display(1, 1, 0.1)'''
+half_rankine.display(1, 1, 0.1)
 
-uni1 = Uniform(1, 0)
+# full bluff body
 source1 = Source(1, (-0.5, 0))
 sink1 = Source(-1, (0.5, 0))
-pair = ComplexFlow([uni1, source1, sink1])
+pair = ComplexFlow([uni, source1, sink1])
 pair.display(5, 5, 0.1)
 
+# flow around cylinder
+doub = Doublet(1)
+cyl = ComplexFlow([uni, doub])
+cyl.display(3, 3, 0.1)
 
-'''# 1D arrays
-X = np.arange(-5, 5, 0.1)
-Y = np.arange(-5, 5, 0.1)
-
-# Meshgrid
-x, y = np.meshgrid(X, Y)
-
-# Assign vector directions
-K = 3
-U = 1
-u = -K*(y/x**2) / (1 + (y/x)**2) + U
-v = K*(1/x) / (1 + (y/x)**2)
-
-# Depict illustration
-plt.figure(figsize=(10, 10))
-plt.streamplot(X, Y, u, v, density=1.4, linewidth=None, color="#2EA7C2")
-plt.plot(-1,0,'-or')
-plt.plot(1,0,'-og')
-plt.title('Potential Flow')
-
-# Show plot with grid
-plt.grid()
-plt.show()'''
+# flow around rotating cylinder
+vortex = FreeVortex(1)
+rotcyl = ComplexFlow([uni, doub, vortex])
+rotcyl.display(3, 3, 0.1)
