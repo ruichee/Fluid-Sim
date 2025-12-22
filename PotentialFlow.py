@@ -105,5 +105,3 @@ sink = Source(-1)
 vort = FreeVortex(3)
 drain = ComplexFlow([sink, vort])
 drain.display(3, 3, 0.01)
-
-import linear_solvers 
