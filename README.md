@@ -3,5 +3,6 @@ Projects on fluid simulation and visualization approches. This includes flow vis
 
 These projects are part of my self-learning and pursuit in computational physics and simulation methods. Much of the code is in progress.
 
-<img width="1040" height="951" alt="image" src="https://github.com/user-attachments/assets/bcd7223c-5b76-4255-a8c7-f4fb18d61526" />
+<img width="564" height="576" alt="image" src="https://github.com/user-attachments/assets/6128f07d-9be7-4af8-ace6-0d3ca4549288" />
+
 
