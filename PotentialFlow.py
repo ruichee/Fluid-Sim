@@ -34,8 +34,9 @@ class Doublet(ElementaryFlow):
 class FreeVortex(ElementaryFlow):
     def __init__(self, strength: float, position=(0, 0)):
         super().__init__(position)
-        self.u = lambda x,y: (strength * -((y-self.y0)/(x-self.x0)**2) / (1 + ((y-self.y0)/(x-self.x0))**2) if abs(x)>0.01 else 0)
-        self.v = lambda x,y: (strength * (1/(x-self.x0)) / (1 + ((y-self.y0)/(x-self.x0))**2) if abs(x)>0.01 else 0)
+        ep = 1e-8   # regularization to prevent singularity in computation
+        self.u = lambda x,y: (strength * -((y-self.y0)/(x-self.x0+ep)**2) / (1 + ((y-self.y0)/(x-self.x0+ep))**2))
+        self.v = lambda x,y: (strength * (1/(x-self.x0+ep)) / (1 + ((y-self.y0)/(x-self.x0+ep))**2))
         self.pos_color = "purple"
 
 #####################################################################################
@@ -68,7 +69,7 @@ class ComplexFlow:
         p = self.p(x,y)
 
         plt.figure(figsize=(11, 10))
-        a = plt.pcolormesh(x, y, p, vmin=-5*np.max(p), vmax=np.max(p), cmap='jet')
+        a = plt.pcolormesh(x, y, p, vmin=-7*np.max(p), vmax=np.max(p), cmap='jet')
         a.cmap.set_under('k')
         plt.colorbar()
         plt.streamplot(x, y, u, v, density=density, broken_streamlines=True, \
@@ -100,10 +101,10 @@ half_rankine = ComplexFlow([uni, source])
 half_rankine.display(5, 5, 0.01)
 
 # full bluff body
-source1 = Source(1, (-0.5, 0))
+'''source1 = Source(1, (-0.5, 0))
 sink1 = Source(-1, (0.5, 0))
 pair = ComplexFlow([uni, source1, sink1])
-pair.display(5, 5, 0.01)
+pair.display(5, 5, 0.01)'''
 
 # flow around cylinder
 doub = Doublet(1)
@@ -116,7 +117,7 @@ rotcyl = ComplexFlow([uni, doub, vortex])
 rotcyl.display(3, 3, 0.01)
 
 # drain
-sink = Source(-1)
+'''sink = Source(-1)
 vort = FreeVortex(3)
 drain = ComplexFlow([sink, vort])
-drain.display(3, 3, 0.01)
+drain.display(10, 10, 0.01)'''
