@@ -123,7 +123,7 @@ dt = .001
 # physical variables
 rho = 1
 nu = .1
-U = 5       # lid u-velocity
+U = 5       # lid x-velocity
 
 # grid initial values setup
 u = np.zeros((ny, nx))   # current u velocity (n+1)
@@ -145,7 +145,7 @@ y = np.linspace(0, y_size, ny)
 X, Y = np.meshgrid(x, y)
 
 # plotting fields
-fig, (axp, axu) = plt.subplots(nrows=1, ncols=2, figsize=(12, 5), dpi=100, sharey=True)
+fig, (axp, axu, axv) = plt.subplots(nrows=1, ncols=3, figsize=(14, 4), dpi=100, sharey=True)
 
 axp.contourf(X, Y, p, cmap='viridis', alpha=0.8) # alternatively use plt.pcolormesh()
 axp.streamplot(X, Y, u, v, density=1.2)
@@ -153,6 +153,9 @@ axp.set_title('Pressure field and Streamlines')
 
 axu.contourf(X, Y, u, cmap='viridis')
 axu.set_title('X-velocity field')
+
+axv.contourf(X, Y, v, cmap='viridis')
+axv.set_title('Y-velocity field')
 
 plt.xlim(0, 2)
 plt.ylim(0, 2)
