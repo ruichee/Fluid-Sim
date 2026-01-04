@@ -34,8 +34,8 @@ class Doublet(ElementaryFlow):
 class FreeVortex(ElementaryFlow):
     def __init__(self, strength: float, position=(0, 0)):
         super().__init__(position)
-        self.u = lambda x,y: strength * -((y-self.y0)/(x-self.x0)**2) / (1 + ((y-self.y0)/(x-self.x0))**2)
-        self.v = lambda x,y: strength * (1/(x-self.x0)) / (1 + ((y-self.y0)/(x-self.x0))**2)
+        self.u = lambda x,y: (strength * -((y-self.y0)/(x-self.x0)**2) / (1 + ((y-self.y0)/(x-self.x0))**2) if abs(x)>0.01 else 0)
+        self.v = lambda x,y: (strength * (1/(x-self.x0)) / (1 + ((y-self.y0)/(x-self.x0))**2) if abs(x)>0.01 else 0)
         self.pos_color = "purple"
 
 #####################################################################################
@@ -46,6 +46,17 @@ class ComplexFlow:
         self.flows = flows
         self.u = lambda x,y: sum([flow.u(x,y) for flow in self.flows])
         self.v = lambda x,y: sum([flow.v(x,y) for flow in self.flows])
+        self.p = self.get_pressure()
+
+    def get_pressure(self, gravity=0, P_ref=0, xy_ref=(100, 100)):
+        # consider implementing custom g direction, default is y-direction now
+        V = lambda x,y: np.sqrt(self.u(x,y)**2 + self.v(x,y)**2)
+        P = lambda x,y: P_ref + 1/2*(V(*xy_ref)**2-V(x,y)**2) + gravity*(xy_ref[1]-y)
+        return P
+
+    def add_wall(self, start: tuple[float, float], end: tuple[float, float]):
+        pass
+    # implement method of images
 
     def display(self, xlim, ylim, step=0.01, density=2.0):
         X = np.arange(-xlim, xlim+step, step)
@@ -54,8 +65,12 @@ class ComplexFlow:
         x, y = np.meshgrid(X, Y)
         u = self.u(x,y)
         v = self.v(x,y)
+        p = self.p(x,y)
 
-        plt.figure(figsize=(10, 10))
+        plt.figure(figsize=(11, 10))
+        a = plt.pcolormesh(x, y, p, vmin=-5*np.max(p), vmax=np.max(p), cmap='jet')
+        a.cmap.set_under('k')
+        plt.colorbar()
         plt.streamplot(x, y, u, v, density=density, broken_streamlines=True, \
                        linewidth=None, start_points=None, color="#2EA7C2")
         
