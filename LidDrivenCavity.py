@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+from tqdm import tqdm
 
 #########################################################################################################
 
@@ -67,7 +68,7 @@ def cavity_flow(rho: float, nu: float, U: float,
                 dx: float, dy: float, dt: float, nt: int, n_iter: int):
     
     # global time advancement loop
-    for _ in range(nt):
+    for _ in tqdm(range(nt), desc="Iterating"):
 
         # set un and vn as previous time step
         un = u.copy()
