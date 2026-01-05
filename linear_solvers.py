@@ -125,28 +125,14 @@ class Iterative:
         return u_new           
         
 
+'''
 A = np.array([[1, 2, 1], [-1, -1, 3], [-2, 1, 1]])
-# print(Direct.LU_decomp(A))
-
 A1 = np.array([[8, 2, 0], [3, -5, 7], [-2, 1, 9]])
 b1 = np.array([[12, 14, 27]]).T
 u1_0 = np.array([[3, 2, 1]]).T
-# print(Iterative.Jacobi(A1, b1, u1_0))
-# print(Iterative.Gauss_Seidel(A1, b1, u1_0))
-# print(Iterative.SOR(A1, b1, u1_0, 0.8))
 
-
-
-
-
-############################## HEAT TRANSFER EXAMPLE ##############################
-
-# Steady State Heat Diffusion in Rectangular Plate
-# where one edge is heated, while other 3 edges are maintained at low temperature
-
-# Governing Equation: ∂²T/∂x² + ∂²T/∂y² = ∇²T = 0
-# Boundary Condition: T(x=0) = 100, T(y=0) = T(y=100) = T(x=100) = 0
-
-# Discretized: T(i,j) = ( T(i-1,j-1) + T(i+1,j-1) + T(i-1,j+1) + T(i+1,j+1) ) / 4
-# => average of 4 neighbouring points
-
+print(Direct.LU_decomp(A))
+print(Iterative.Jacobi(A1, b1, u1_0))
+print(Iterative.Gauss_Seidel(A1, b1, u1_0))
+print(Iterative.SOR(A1, b1, u1_0, 0.8))
+'''
