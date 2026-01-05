@@ -6,6 +6,9 @@ from tqdm import tqdm
 #########################################################################################################
 
 ## Lid-Driven Cavity Flow (momentum-pressure formulation) ##
+
+## using a predictor-corrector approach to enforce continuity ##
+## all iterations, both pressure poisson and time advancement are via stencils ##
 '''
 - Governing Equations (NS equations with no gravity): 
     - ∂u/∂t + u(∂u/∂x) + v(∂u/∂y) = -(1/ρ)(∂P/∂x) + 𝜈(∂²u/∂x² + ∂²u/∂y²)
