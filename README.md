@@ -2,6 +2,7 @@
 Projects on fluid simulation and visualization approches. This includes flow visualization of potential flows, numerical methods, and graphical displays. The programs here are generally numerical methods such as finite difference approximations for partial differential equations (PDEs).
 
 These projects are part of my self-learning and pursuit in computational physics and simulation methods. Much of the code is in progress.
-
-<img width="1040" height="951" alt="image" src="https://github.com/user-attachments/assets/bcd7223c-5b76-4255-a8c7-f4fb18d61526" />
+<p align="center">
+  <img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/6128f07d-9be7-4af8-ace6-0d3ca4549288" />
+</p>
 
